@@ -121,20 +121,20 @@ class SimpleModel(object):
                                                         self.config.channels],
                                                  dtype=tf.float32,
                                                  name='Images')
-                    self.val_images = tf.placeholder(shape=[None,
-                                                            self.config.image_size,
-                                                            self.config.image_size,
-                                                            self.config.channels],
-                                                     dtype=tf.float32,
-                                                     name='Images')
+                    # self.val_images = tf.placeholder(shape=[None,
+                    #                                         self.config.image_size,
+                    #                                         self.config.image_size,
+                    #                                         self.config.channels],
+                    #                                  dtype=tf.float32,
+                    #                                  name='Images')
 
                     # Input labels that represent the real outputs
                     self.labels = tf.placeholder(shape=[None, 1],
                                                  dtype=tf.float32,
                                                  name='Labels')
-                    self.val_labels = tf.placeholder(shape=[None, 1],
-                                                     dtype=tf.float32,
-                                                     name='Labels')
+                    # self.val_labels = tf.placeholder(shape=[None, 1],
+                    #                                  dtype=tf.float32,
+                    #                                  name='Labels')
 
                     # Is Training?
                     self.training = tf.placeholder(dtype=tf.bool)
@@ -153,29 +153,29 @@ class SimpleModel(object):
                         labels=self.labels, predictions=self.model)
 
                     # Validation
-                    self.val_model = self.init_model(
-                        self.val_images, self.training)
-                    self.val_predictions = tf.greater_equal(
-                        self.val_model, thresholds)
-                    val_correct_prediction = tf.equal(
-                        self.val_predictions, tf.cast(self.val_labels, tf.bool))
-                    self.val_accuracy = tf.reduce_mean(
-                        tf.cast(correct_prediction, tf.float32))
-                    self.val_loss = tf.losses.log_loss(
-                        labels=self.labels, predictions=self.model)
+                    # self.val_model = self.init_model(
+                    #     self.val_images, self.training)
+                    # self.val_predictions = tf.greater_equal(
+                    #     self.val_model, thresholds)
+                    # val_correct_prediction = tf.equal(
+                    #     self.val_predictions, tf.cast(self.val_labels, tf.bool))
+                    # self.val_accuracy = tf.reduce_mean(
+                    #     tf.cast(correct_prediction, tf.float32))
+                    # self.val_loss = tf.losses.log_loss(
+                    #     labels=self.labels, predictions=self.model)
 
                     # self.loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
                     #     labels=self.labels, logits=self.model))
                     # self.accuracy = tf.constant(1)
                     # self.loss = tf.constant(1)
-                    self.optimizer = tf.train.AdamOptimizer(
+                    self.optimizer = tf.train.RMSPropOptimizer(
                         learning_rate=self.learning_rate).minimize(self.loss)
 
                     # TensorBoard Summary
                     tf.summary.scalar("log_loss", self.loss)
                     tf.summary.scalar("accuracy", self.accuracy)
-                    tf.summary.scalar("val_loss", self.val_loss)
-                    tf.summary.scalar("val_accuracy", self.val_accuracy)
+                    # tf.summary.scalar("val_loss", self.val_loss)
+                    # tf.summary.scalar("val_accuracy", self.val_accuracy)
                     self.summary = tf.summary.merge_all()
 
                     self.init = tf.global_variables_initializer()
@@ -207,13 +207,9 @@ class SimpleModel(object):
         return loss, acc
 
     def eval_batch(self, batch_images, batch_labels, training=False):
-        feed_dict = {
-            self.val_images: batch_images,
-            self.val_labels: batch_labels,
-            self.training: training
-        }
-        _, summary, loss, acc = self.sess.run(
-            [self.val_model, self.summary, self.val_loss, self.val_accuracy], feed_dict=feed_dict)
+        feed_dict = self.generate_feed_dict
+        summary, loss, acc = self.sess.run(
+            [self.summary, self.loss, self.accuracy], feed_dict=feed_dict)
         return summary, loss, acc
 
     def test_batch(self, batch_images, batch_labels, training=False):
