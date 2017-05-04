@@ -131,11 +131,11 @@ class SimpleModel(object):
                     self.training = tf.placeholder(dtype=tf.bool)
 
                     self.model = self.init_model(self.images, self.training)
+                    self.preds = tf.nn.sigmoid(self.model)
                     thresholds = tf.fill(
                         [self.config.batch_size], self.config.threshold)
-                    self.preds = tf.nn.sigmoid(self.model)
                     self.predictions = tf.greater_equal(
-                        self.model, thresholds)
+                        self.preds, thresholds)
                     correct_prediction = tf.equal(
                         self.predictions, tf.cast(self.labels, tf.bool))
                     self.accuracy = tf.reduce_mean(
@@ -206,6 +206,8 @@ class SimpleModel(object):
         ckpt = tf.train.get_checkpoint_state(self.config.ckpt_path)
         # restore session
         if ckpt and ckpt.model_checkpoint_path:
+            self.saver = tf.train.import_meta_graph(
+                ckpt.model_checkpoint_path + '.meta')
             self.saver.restore(self.sess, ckpt.model_checkpoint_path)
 
 

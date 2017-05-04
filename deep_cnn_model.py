@@ -177,11 +177,11 @@ class DeepModel(object):
                     self.training = tf.placeholder(dtype=tf.bool)
 
                     self.model = self.init_model(self.images, self.training)
+                    self.preds = tf.nn.sigmoid(self.model)
                     thresholds = tf.fill(
                         [self.config.batch_size], self.config.threshold)
-                    self.preds = tf.nn.sigmoid(self.model)
                     self.predictions = tf.greater_equal(
-                        self.model, thresholds)
+                        self.preds, thresholds)
                     correct_prediction = tf.equal(
                         self.predictions, tf.cast(self.labels, tf.bool))
                     self.accuracy = tf.reduce_mean(
