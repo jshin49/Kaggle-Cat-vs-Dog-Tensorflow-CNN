@@ -19,6 +19,8 @@ BATCH_SIZES = [16, 32, 64]
 dogs = [TRAIN_DIR + i for i in os.listdir(TRAIN_DIR) if 'dog' in i]
 cats = [TRAIN_DIR + i for i in os.listdir(TRAIN_DIR) if 'cat' in i]
 
+tests = [TEST_DIR + i for i in os.listdir(TEST_DIR)]
+
 
 def load_data(img_size):
     '''
@@ -51,6 +53,33 @@ def load_data(img_size):
     return np.array(train_dogs), np.array(train_cats)
 
 
+def load_test_data(img_size):
+    '''
+        Read and Preprocess Images into each labels
+    '''
+    test_data = []
+    if not os.path.exists(IMG_DIR + 'test_data' + str(img_size) + '.npy'):
+        for test in tqdm(tests):
+            index = test[12:-4]
+            img = pi.process_image(test, img_size, PIXEL_DEPTH)
+            test_data.append([np.array(img), index])
+        np.save(IMG_DIR + 'test_data' + str(img_size) + '.npy', test_data)
+    else:
+        test_data = np.load(IMG_DIR + 'test_data' + str(img_size) + '.npy')
+
+    return np.array(test_data)
+
+
+def prepare_test_data(test_data):
+    '''
+        Split test data into batches
+        return batches
+    '''
+    print("Generating test batches")
+    batches = np.array(np.array_split(test_data, 100))
+    return batches
+
+
 def prepare_train_data(train_dogs, train_cats, batch_size):
     '''
         Split data into evenly distributed batches
@@ -74,13 +103,9 @@ def prepare_train_data(train_dogs, train_cats, batch_size):
     return batches
 
 
-def next_batch(batches):
-    return batches.pop(0)
-
-
 def split_batches(batches):
     '''
-    Split batches into 5 units and load them dynamically 
+    Split batches into 5 units and load them dynamically
     during training, to save memory
     '''
     batches = np.array_split(batches, 20)
@@ -108,6 +133,12 @@ def init_data(config):
 
     return valid_batches
 
+
+def init_test_data(config):
+    test_data = load_test_data(config.image_size)
+    test_batches = prepare_test_data(test_data)
+    test_data = []
+    return test_batches
 
 if __name__ == '__main__':
     for img_size in IMG_SIZES:

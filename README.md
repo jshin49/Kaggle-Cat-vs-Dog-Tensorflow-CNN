@@ -9,6 +9,7 @@ Preparations
 4. ```mkdir npys```
 5. unzip data in ```./data```
 6. ```pip install -r requirements.txt```
+7. Install OpenCV 2.4.13 for Python
 
 Steps
 1. ```python utils/prepare_data.py```

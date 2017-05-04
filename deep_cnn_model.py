@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 
 from configs import DeepConfig
-from utils.prepare_data import load_data, prepare_train_data, next_batch
+from utils.prepare_data import load_data, prepare_train_data
 
 
 class DeepModel(object):
@@ -207,7 +207,7 @@ class DeepModel(object):
                 with tf.device('/cpu:0'):
                     self.saver = tf.train.Saver(tf.trainable_variables())
 
-    def generate_feed_dict(self, batch_images, batch_labels=None, training=False):
+    def generate_feed_dict(self, batch_images, batch_labels, training=False):
         return {
             self.images: batch_images,
             self.labels: batch_labels,
@@ -235,9 +235,10 @@ class DeepModel(object):
             [self.loss, self.accuracy], feed_dict=feed_dict)
         return loss, acc
 
-    def test_batch(self, batch_images, training=False):
+    def test_batch(self, batch_images, batch_labels, training=False):
         self.sess.run(self.init)
-        feed_dict = self.generate_feed_dict(batch_images, training)
+        feed_dict = self.generate_feed_dict(
+            batch_images, batch_labels, training)
         pred = self.sess.run(
             [self.model], feed_dict=feed_dict)
         return pred
@@ -271,8 +272,8 @@ if __name__ == '__main__':
     train_dogs, train_cats = load_data(config.image_size)
     train_batches = prepare_train_data(
         train_dogs, train_cats, config.batch_size)
-    train_batch = next_batch(train_batches)
-    batch_images, batch_labels = map(list, zip(*train_batch))
+    # train_batch = next_batch(train_batches)
+    batch_images, batch_labels = map(list, zip(*train_batches[0]))
     batch_images = np.array(batch_images)
     batch_labels = np.array(batch_labels).reshape(-1, 1)
     pred, loss, acc = model.predict(batch_images, batch_labels)

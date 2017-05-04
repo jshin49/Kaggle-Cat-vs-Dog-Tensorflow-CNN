@@ -4,3 +4,4 @@ MNIST_data/
 data/
 __pycache__
 .DS_Store
+ckpt
