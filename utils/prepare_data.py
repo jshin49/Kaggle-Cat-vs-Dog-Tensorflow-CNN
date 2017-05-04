@@ -111,7 +111,7 @@ def init_data(config):
 
 if __name__ == '__main__':
     for img_size in IMG_SIZES:
-        train_dogs, train_cats = read_images(img_size)
+        train_dogs, train_cats = load_data(img_size)
         print("Train Dogs: {}".format(train_dogs.shape))
         print("Train Cats: {}".format(train_cats.shape))
     # train_dogs, train_cats = load_data(64)
