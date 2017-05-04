@@ -110,20 +110,22 @@ def init_data(config):
 
 
 if __name__ == '__main__':
-    # for img_size in IMG_SIZES:
-    #     read_images(img_size)
-    train_dogs, train_cats = load_data(64)
-    print("Train Dogs: {}".format(train_dogs.shape))
-    print("Train Cats: {}".format(train_cats.shape))
-    print(train_cats[0].shape)
-    print(train_cats[0][0].shape)
-    print(train_cats[0][1])
-    batches = prepare_train_data(train_dogs, train_cats, 32)
-    print(len(batches))
-    split_batches(batches)
+    for img_size in IMG_SIZES:
+        train_dogs, train_cats = read_images(img_size)
+        print("Train Dogs: {}".format(train_dogs.shape))
+        print("Train Cats: {}".format(train_cats.shape))
+    # train_dogs, train_cats = load_data(64)
+    # print("Train Dogs: {}".format(train_dogs.shape))
+    # print("Train Cats: {}".format(train_cats.shape))
+    # print(train_cats[0].shape)
+    # print(train_cats[0][0].shape)
+    # print(train_cats[0][1])
+    # batches = prepare_train_data(train_dogs, train_cats, 32)
+    # print(len(batches))
+    # split_batches(batches)
 
-    plt.imshow(train_dogs[0][0], cmap='gray')
-    plt.show()
+    # plt.imshow(train_dogs[0][0], cmap='gray')
+    # plt.show()
     # plt.imshow(train_dogs[1][0], interpolation='nearest')
     # plt.figure()
     # plt.imshow(train_dogs[2][0], interpolation='nearest')
