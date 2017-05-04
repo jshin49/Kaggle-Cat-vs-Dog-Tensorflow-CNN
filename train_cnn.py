@@ -8,7 +8,9 @@ import sys
 import numpy as np
 import tensorflow as tf
 from tqdm import tqdm
-import random
+
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from simple_cnn_model import SimpleModel
