@@ -206,6 +206,7 @@ class SimpleModel(object):
         ckpt = tf.train.get_checkpoint_state(self.config.ckpt_path)
         # restore session
         if ckpt and ckpt.model_checkpoint_path:
+            print("\n Restoring model")
             self.saver = tf.train.import_meta_graph(
                 ckpt.model_checkpoint_path + '.meta')
             self.saver.restore(self.sess, ckpt.model_checkpoint_path)

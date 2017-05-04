@@ -12,7 +12,7 @@ class SimpleConfig(object):
     dropout = 0.5       # Dropout Rate
     batch_size = 16     # SGD Batch Size
     epochs = 30         # Number of Training Epochs
-    threshold = 0.7     # Threshold for accurate classification
+    threshold = 0.5     # Threshold for accurate classification
 
     # Data Processing
     image_size = 64    # resize image to image_size*image_size
@@ -39,7 +39,7 @@ class DeepConfig(object):
     dropout = 0.5       # Dropout Rate
     batch_size = 16     # SGD Batch Size
     epochs = 30         # Number of Training Epochs
-    threshold = 0.7     # Threshold for accurate classification
+    threshold = 0.5     # Threshold for accurate classification
 
     # Data Processing
     image_size = 64     # resize image to image_size*image_size
