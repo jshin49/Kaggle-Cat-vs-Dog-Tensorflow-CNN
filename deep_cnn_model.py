@@ -117,9 +117,9 @@ class DeepModel(object):
 
         # Dense Layer
         # Flatten for 64*64 : 8,8,128
-        # flatten = tf.reshape(pool3, [-1, 8 * 8 * 128])
+        flatten = tf.reshape(pool3, [-1, 8 * 8 * 128])
         # Flatten for 150*150 : 18,18,128
-        flatten = tf.reshape(pool3, [-1, 18 * 18 * 128])
+        # flatten = tf.reshape(pool3, [-1, 18 * 18 * 128])
         # Flatten for 224*224 : 28,28,128
         # flatten = tf.reshape(pool4, [-1, 28 * 28 * 128])
         # Dense Layer
@@ -151,7 +151,7 @@ class DeepModel(object):
             training=training)
 
         # One output: Confidence score of being a dog
-        logits = tf.layers.dense(inputs=fc1, units=1)
+        logits = tf.layers.dense(inputs=fc1, units=1, activation=tf.nn.sigmoid)
 
         return logits
 

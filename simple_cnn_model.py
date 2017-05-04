@@ -84,9 +84,9 @@ class SimpleModel(object):
 
         # Dense Layer
         # Flatten for 64*64 : 8,8,64
-        # flatten = tf.reshape(pool3, [-1, 8 * 8 * 64])
+        flatten = tf.reshape(pool3, [-1, 8 * 8 * 64])
         # Flatten for 150*150 : 18,18,64
-        flatten = tf.reshape(pool3, [-1, 18 * 18 * 64])
+        # flatten = tf.reshape(pool3, [-1, 18 * 18 * 64])
         # Flatten for 224*224 : 28,28,256
         # flatten = tf.reshape(pool4, [-1, 28 * 28 * 64])
         # Dense Layer
@@ -105,7 +105,7 @@ class SimpleModel(object):
             training=training)
 
         # One output: Confidence score of being a dog
-        logits = tf.layers.dense(inputs=fc1, units=1)
+        logits = tf.layers.dense(inputs=fc1, units=1, activation=tf.nn.sigmoid)
 
         return logits
 
@@ -235,6 +235,6 @@ if __name__ == '__main__':
     # pred, loss, acc = model.predict(
     #     zeros, np.array([1, 1, 1, 1, 1, 1, 1, 1]).reshape(-1, 1))
     # print(pred, batch_labels)
-    print(pred.shape)
+    print(pred, batch_labels)
     print(loss)
     print(acc)
