@@ -1,0 +1,6 @@
+MNIST_data/
+*.npy
+*.pyc
+data/
+__pycache__
+.DS_Store
