@@ -76,7 +76,7 @@ def train(model, valid_batches):
                     x_steps.append(global_step)
                     y_training_loss.append(loss)
                     y_training_accuracy.append(acc)
-                    y_valid_loss.append(val_acc)
+                    y_valid_loss.append(val_loss)
                     y_valid_accuracy.append(val_acc)
 
                 global_step += 1
