@@ -250,10 +250,10 @@ class DeepModel(object):
 
     def restore(self):
         # get checkpoint state
-        ckpt = tf.train.get_checkpoint_state(self.config.ckpt_path)
+        ckpt = tf.train.get_checkpoint_state('./ckpt')
         # restore session
         if ckpt and ckpt.model_checkpoint_path:
-            print("\n Restoring model")
+            print("\nRestoring model")
             self.saver = tf.train.import_meta_graph(
                 ckpt.model_checkpoint_path + '.meta')
             self.saver.restore(self.sess, ckpt.model_checkpoint_path)
