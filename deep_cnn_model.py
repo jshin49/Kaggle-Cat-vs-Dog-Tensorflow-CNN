@@ -239,7 +239,6 @@ class DeepModel(object):
         }
 
     def predict(self, batch_images, batch_labels):
-        self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(batch_images, batch_labels, False)
         pred, loss, acc = self.sess.run(
             [self.model, self.loss, self.accuracy], feed_dict=feed_dict)
@@ -253,13 +252,13 @@ class DeepModel(object):
         return loss, acc
 
     def eval_batch(self, batch_images, batch_labels, training=False):
-        feed_dict = self.generate_feed_dict
+        feed_dict = self.generate_feed_dict(
+            batch_images, batch_labels, training)
         summary, loss, acc = self.sess.run(
             [self.summary, self.loss, self.accuracy], feed_dict=feed_dict)
         return summary, loss, acc
 
     def test_batch(self, batch_images, batch_labels, training=False):
-        self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(
             batch_images, batch_labels, training)
         pred = self.sess.run(
