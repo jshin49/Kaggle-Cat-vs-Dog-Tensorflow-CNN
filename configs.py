@@ -7,7 +7,7 @@ class SimpleConfig(object):
     instantiation.
     """
     # Hyperparameters
-    lr = 0.0001         # Learning Rate
+    lr = 0.00001        # Learning Rate
     l2 = 0.01           # L2 Loss Coefficient
     dropout = 0.4       # Dropout Rate
     batch_size = 16     # SGD Batch Size
@@ -34,7 +34,7 @@ class DeepConfig(object):
     instantiation.
     """
     # Hyperparameters
-    lr = 0.0001         # Learning Rate
+    lr = 0.00001        # Learning Rate
     l2 = 0.01           # L2 Loss Coefficient
     dropout = 0.4       # Dropout Rate
     batch_size = 16     # SGD Batch Size
