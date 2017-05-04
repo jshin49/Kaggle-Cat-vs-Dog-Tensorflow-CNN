@@ -1,4 +1,4 @@
-model_checkpoint_path: "model-lr0.001-img64.ckpt-21090"
+model_checkpoint_path: "simple.ckpt-21090"
 all_model_checkpoint_paths: "model-lr0.001-img64.ckpt-19966"
 all_model_checkpoint_paths: "model-lr0.001-img64.ckpt-20247"
 all_model_checkpoint_paths: "model-lr0.001-img64.ckpt-20528"

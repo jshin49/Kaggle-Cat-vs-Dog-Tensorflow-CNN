@@ -43,7 +43,7 @@ def train(model, valid_batches):
     valid_size = len(valid_batches)
 
     global_step = 0
-    for i in range(5):
+    for i in range(20):
         print("Loading Batch")
         train_batches = load_batches(i)
         for epoch in range(model.epochs):
@@ -130,5 +130,7 @@ if __name__ == '__main__':
     print("\nGlobal Variables Initialized")
 
     model.restore()
+    print("\nModel Restored")
+
     train(model, valid_batches)
     print("Training Complete")

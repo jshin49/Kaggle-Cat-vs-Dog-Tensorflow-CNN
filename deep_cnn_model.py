@@ -117,9 +117,9 @@ class DeepModel(object):
 
         # Dense Layer
         # Flatten for 64*64 : 8,8,128
-        flatten = tf.reshape(pool3, [-1, 8 * 8 * 128])
+        # flatten = tf.reshape(pool3, [-1, 8 * 8 * 128])
         # Flatten for 150*150 : 18,18,128
-        # flatten = tf.reshape(pool4, [-1, 18 * 18 * 128])
+        flatten = tf.reshape(pool3, [-1, 18 * 18 * 128])
         # Flatten for 224*224 : 28,28,128
         # flatten = tf.reshape(pool4, [-1, 28 * 28 * 128])
         # Dense Layer
@@ -262,6 +262,11 @@ if __name__ == '__main__':
     sess = tf.Session(config=sess_config)
     config = DeepConfig()
     model = DeepModel(config, sess, graph)
+
+    model.sess.run(model.init)
+    print("\nGlobal Variables Initialized")
+    model.restore()
+    print("\nModel Restored")
 
     train_dogs, train_cats = load_data(config.image_size)
     train_batches = prepare_train_data(

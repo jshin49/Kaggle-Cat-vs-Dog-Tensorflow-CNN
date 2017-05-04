@@ -83,8 +83,8 @@ def split_batches(batches):
     Split batches into 5 units and load them dynamically 
     during training, to save memory
     '''
-    batches = np.array_split(batches, 5)
-    for i in range(5):
+    batches = np.array_split(batches, 20)
+    for i in range(20):
         np.save(BATCH_DIR + 'batch' + str(i) + '.npy', batches[i])
 
 
