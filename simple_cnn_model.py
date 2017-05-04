@@ -105,7 +105,7 @@ class SimpleModel(object):
             training=training)
 
         # One output: Confidence score of being a dog
-        logits = tf.layers.dense(inputs=fc1, units=1, activation=tf.nn.sigmoid)
+        logits = tf.layers.dense(inputs=fc1, units=1)
 
         return logits
 
@@ -133,6 +133,7 @@ class SimpleModel(object):
                     self.model = self.init_model(self.images, self.training)
                     thresholds = tf.fill(
                         [self.config.batch_size], self.config.threshold)
+                    self.preds = tf.nn.sigmoid(self.model)
                     self.predictions = tf.greater_equal(
                         self.model, thresholds)
                     correct_prediction = tf.equal(
@@ -170,8 +171,8 @@ class SimpleModel(object):
     def predict(self, batch_images, batch_labels):
         self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(batch_images, batch_labels, False)
-        pred, loss, acc = self.sess.run(
-            [self.model, self.loss, self.accuracy], feed_dict=feed_dict)
+        _, pred, loss, acc = self.sess.run(
+            [self.model, self.preds, self.loss, self.accuracy], feed_dict=feed_dict)
         return pred, loss, acc
 
     def train_eval_batch(self, batch_images, batch_labels, training=True):
@@ -192,8 +193,8 @@ class SimpleModel(object):
         self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(
             batch_images, batch_labels, training)
-        pred = self.sess.run(
-            [self.model], feed_dict=feed_dict)
+        _, pred = self.sess.run(
+            [self.model, self.preds], feed_dict=feed_dict)
         return pred
 
     def save(self, step):
@@ -217,8 +218,8 @@ if __name__ == '__main__':
     config = SimpleConfig()
     model = SimpleModel(config, sess, graph)
 
-    model.sess.run(model.init)
-    print("\nGlobal Variables Initialized")
+    # model.sess.run(model.init)
+    # print("\nGlobal Variables Initialized")
     model.restore()
     print("\nModel Restored")
 
