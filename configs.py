@@ -11,13 +11,10 @@ class SimpleConfig(object):
     l2 = 0.001          # L2 Loss Coefficient
     dropout = 0.5       # Dropout Rate
     batch_size = 16     # SGD Batch Size
-    epochs = 15         # Number of Training Epochs
+    epochs = 30         # Number of Training Epochs
     threshold = 0.5     # Threshold for accurate classification
 
     # Data Processing
-    train_dir = './data/train'
-    test_dir = './data/test'
-    image_dir = './arrays/'
     image_size = 150    # resize image to image_size*image_size
     channels = 3        # Channel Size
 
@@ -45,9 +42,6 @@ class DeepConfig(object):
     threshold = 0.5     # Threshold for accurate classification
 
     # Data Processing
-    train_dir = './data/train'
-    test_dir = './data/test'
-    image_dir = './arrays/'
     image_size = 150     # resize image to image_size*image_size
     channels = 3        # Channel Size
 

@@ -88,25 +88,29 @@ def train(model, valid_batches):
             plt.plot(x_steps, y_training_loss)
             plt.xlabel('Steps (per 20 Global Steps)')
             plt.ylabel('Training Loss')
-            plt.savefig(GRAPH_DIR + 'training_loss_simple_cnn.png')
+            plt.savefig(GRAPH_DIR + DEPTH +
+                        '_training_loss_simple_cnn.png')
 
             plt.clf()
             plt.plot(x_steps, y_training_accuracy)
             plt.xlabel('Steps')
             plt.ylabel('Training Accuracy')
-            plt.savefig(GRAPH_DIR + 'training_accuracy_simple_cnn.png')
+            plt.savefig(GRAPH_DIR + DEPTH +
+                        '_training_accuracy_simple_cnn.png')
 
             plt.clf()
             plt.plot(x_steps, y_valid_loss)
             plt.xlabel('Steps')
             plt.ylabel('Validation Loss')
-            plt.savefig(GRAPH_DIR + 'validation_loss_simple_cnn.png')
+            plt.savefig(GRAPH_DIR + DEPTH +
+                        '_validation_loss_simple_cnn.png')
 
             plt.clf()
             plt.plot(x_steps, y_valid_accuracy)
             plt.xlabel('Steps')
             plt.ylabel('Validation Accuracy')
-            plt.savefig(GRAPH_DIR + 'validation_accuracy_simple_cnn.png')
+            plt.savefig(GRAPH_DIR + DEPTH +
+                        '_validation_accuracy_simple_cnn.png')
 
 
 if __name__ == '__main__':
