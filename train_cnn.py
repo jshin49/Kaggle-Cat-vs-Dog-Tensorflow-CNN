@@ -66,11 +66,13 @@ def train(model, valid_batches):
                     valid_batch_images = np.array(valid_batch_images)
                     valid_batch_labels = np.array(
                         valid_batch_labels).reshape(-1, 1)
-                    val_loss, val_acc = model.eval_batch(
+
+                    summary, val_loss, val_acc = model.eval_batch(
                         valid_batch_images, valid_batch_labels)
                     print('Epoch: %d, Global Step: %d, Valid Batch Loss: %f, Valid Batch Acc: %f' % (
                         epoch + 1, global_step, val_loss, val_acc))
 
+                    model.writer.add_summary(summary, global_step)
                     x_steps.append(global_step)
                     y_training_loss.append(loss)
                     y_training_accuracy.append(acc)
@@ -130,11 +132,8 @@ if __name__ == '__main__':
 
     valid_batches = init_data(model.config)
 
-    model.sess.run(model.init)
-    print("\nGlobal Variables Initialized")
-
     model.restore()
-    print("\nModel Restored")
 
     train(model, valid_batches)
     print("Training Complete")
+    model.writer.close()

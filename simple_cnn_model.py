@@ -92,7 +92,7 @@ class SimpleModel(object):
         # Dense Layer
         fc1 = tf.layers.dense(
             inputs=flatten,
-            units=64,
+            units=1024,
             activation=tf.nn.relu,
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
@@ -105,7 +105,7 @@ class SimpleModel(object):
             training=training)
 
         # One output: Confidence score of being a dog
-        logits = tf.layers.dense(inputs=fc1, units=1)
+        logits = tf.layers.dense(inputs=fc1, units=1, activation=tf.nn.sigmoid)
 
         return logits
 
@@ -121,38 +121,62 @@ class SimpleModel(object):
                                                         self.config.channels],
                                                  dtype=tf.float32,
                                                  name='Images')
+                    self.val_images = tf.placeholder(shape=[None,
+                                                            self.config.image_size,
+                                                            self.config.image_size,
+                                                            self.config.channels],
+                                                     dtype=tf.float32,
+                                                     name='Images')
 
                     # Input labels that represent the real outputs
                     self.labels = tf.placeholder(shape=[None, 1],
                                                  dtype=tf.float32,
                                                  name='Labels')
+                    self.val_labels = tf.placeholder(shape=[None, 1],
+                                                     dtype=tf.float32,
+                                                     name='Labels')
 
                     # Is Training?
                     self.training = tf.placeholder(dtype=tf.bool)
 
                     self.model = self.init_model(self.images, self.training)
-                    self.preds = tf.nn.sigmoid(self.model)
+                    # self.preds = tf.nn.sigmoid(self.model)
                     thresholds = tf.fill(
                         [self.config.batch_size], self.config.threshold)
                     self.predictions = tf.greater_equal(
-                        self.preds, thresholds)
+                        self.model, thresholds)
                     correct_prediction = tf.equal(
                         self.predictions, tf.cast(self.labels, tf.bool))
                     self.accuracy = tf.reduce_mean(
                         tf.cast(correct_prediction, tf.float32))
-                    # self.loss = tf.losses.log_loss(
-                    #     labels=self.labels, predictions=self.model)
-                    self.loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
-                        labels=self.labels, logits=self.model))
+                    self.loss = tf.losses.log_loss(
+                        labels=self.labels, predictions=self.model)
+
+                    # Validation
+                    self.val_model = self.init_model(
+                        self.val_images, self.training)
+                    self.val_predictions = tf.greater_equal(
+                        self.val_model, thresholds)
+                    val_correct_prediction = tf.equal(
+                        self.val_predictions, tf.cast(self.val_labels, tf.bool))
+                    self.val_accuracy = tf.reduce_mean(
+                        tf.cast(correct_prediction, tf.float32))
+                    self.val_loss = tf.losses.log_loss(
+                        labels=self.labels, predictions=self.model)
+
+                    # self.loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
+                    #     labels=self.labels, logits=self.model))
                     # self.accuracy = tf.constant(1)
                     # self.loss = tf.constant(1)
-                    self.optimizer = tf.train.RMSPropOptimizer(
+                    self.optimizer = tf.train.AdamOptimizer(
                         learning_rate=self.learning_rate).minimize(self.loss)
 
                     # TensorBoard Summary
-                    # tf.summary.scalar("log_loss", self.loss)
-                    # tf.summary.scalar("accuracy", self.accuracy)
-                    # self.summary = tf.summary.merge_all()
+                    tf.summary.scalar("log_loss", self.loss)
+                    tf.summary.scalar("accuracy", self.accuracy)
+                    tf.summary.scalar("val_loss", self.val_loss)
+                    tf.summary.scalar("val_accuracy", self.val_accuracy)
+                    self.summary = tf.summary.merge_all()
 
                     self.init = tf.global_variables_initializer()
                     self.writer = tf.summary.FileWriter(
@@ -171,8 +195,8 @@ class SimpleModel(object):
     def predict(self, batch_images, batch_labels):
         self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(batch_images, batch_labels, False)
-        _, pred, loss, acc = self.sess.run(
-            [self.model, self.preds, self.loss, self.accuracy], feed_dict=feed_dict)
+        pred, loss, acc = self.sess.run(
+            [self.model, self.loss, self.accuracy], feed_dict=feed_dict)
         return pred, loss, acc
 
     def train_eval_batch(self, batch_images, batch_labels, training=True):
@@ -183,18 +207,21 @@ class SimpleModel(object):
         return loss, acc
 
     def eval_batch(self, batch_images, batch_labels, training=False):
-        feed_dict = self.generate_feed_dict(
-            batch_images, batch_labels, training)
-        loss, acc = self.sess.run(
-            [self.loss, self.accuracy], feed_dict=feed_dict)
-        return loss, acc
+        feed_dict = {
+            self.val_images: batch_images,
+            self.val_labels: batch_labels,
+            self.training: training
+        }
+        _, summary, loss, acc = self.sess.run(
+            [self.val_model, self.summary, self.val_loss, self.val_accuracy], feed_dict=feed_dict)
+        return summary, loss, acc
 
     def test_batch(self, batch_images, batch_labels, training=False):
         self.sess.run(self.init)
         feed_dict = self.generate_feed_dict(
             batch_images, batch_labels, training)
-        _, pred = self.sess.run(
-            [self.model, self.preds], feed_dict=feed_dict)
+        pred = self.sess.run(
+            [self.model], feed_dict=feed_dict)
         return pred
 
     def save(self, step):
@@ -210,6 +237,9 @@ class SimpleModel(object):
             self.saver = tf.train.import_meta_graph(
                 ckpt.model_checkpoint_path + '.meta')
             self.saver.restore(self.sess, ckpt.model_checkpoint_path)
+        else:
+            self.sess.run(self.init)
+            print("\nGlobal Variables Initialized")
 
 
 if __name__ == '__main__':
@@ -224,7 +254,6 @@ if __name__ == '__main__':
     # model.sess.run(model.init)
     # print("\nGlobal Variables Initialized")
     model.restore()
-    print("\nModel Restored")
 
     train_dogs, train_cats = load_data(config.image_size)
     train_batches = prepare_train_data(
