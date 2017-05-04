@@ -71,7 +71,7 @@ def train(model, valid_batches):
                     print('Epoch: %d, Global Step: %d, Valid Batch Loss: %f, Valid Batch Acc: %f' % (
                         epoch + 1, global_step, val_loss, val_acc))
 
-                    x_steps.append(global_step / 20)
+                    x_steps.append(global_step)
                     y_training_loss.append(loss)
                     y_training_accuracy.append(acc)
                     y_valid_loss.append(val_acc)

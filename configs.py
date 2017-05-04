@@ -18,13 +18,13 @@ class SimpleConfig(object):
     train_dir = './data/train'
     test_dir = './data/test'
     image_dir = './arrays/'
-    image_size = 64     # resize image to image_size*image_size
+    image_size = 150    # resize image to image_size*image_size
     channels = 3        # Channel Size
 
     valid_size = 0.1
 
     # Saver
-    model_name = 'model-lr{}-img{}'.format(lr, image_size)
+    model_name = 'simple'
     ckpt_path = 'ckpt/' + model_name
 
 
@@ -50,9 +50,9 @@ class DeepConfig(object):
     image_dir = './arrays/'
     image_size = 150     # resize image to image_size*image_size
     channels = 3        # Channel Size
-    valid_size = 1000
-    train_size = 24000
+
+    valid_size = 0.1
 
     # Saver
-    model_name = 'model-lr{}-img{}'.format(lr, image_size)
+    model_name = 'deep'
     ckpt_path = 'ckpt/' + model_name
