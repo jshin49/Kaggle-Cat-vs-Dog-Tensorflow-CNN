@@ -74,7 +74,7 @@ class DeepModel(object):
             bias_regularizer=regularizer,
             activation=tf.nn.relu)
         conv2 = tf.layers.conv2d(
-            inputs=pool1,
+            inputs=conv2,
             filters=64,
             kernel_size=[3, 3],
             padding="same",
@@ -100,7 +100,7 @@ class DeepModel(object):
             bias_regularizer=regularizer,
             activation=tf.nn.relu)
         conv3 = tf.layers.conv2d(
-            inputs=pool2,
+            inputs=conv3,
             filters=128,
             kernel_size=[3, 3],
             padding="same",
@@ -151,7 +151,7 @@ class DeepModel(object):
             training=training)
 
         # One output: Confidence score of being a dog
-        logits = tf.layers.dense(inputs=fc1, units=1)
+        logits = tf.layers.dense(inputs=fc2, units=1)
 
         return logits
 
