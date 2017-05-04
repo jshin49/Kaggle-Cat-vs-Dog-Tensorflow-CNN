@@ -2,11 +2,11 @@ import sys
 import numpy as np
 import tensorflow as tf
 
-from configs import SimpleConfig
+from configs import DeepConfig
 from utils.prepare_data import load_data, prepare_train_data, next_batch
 
 
-class Model(object):
+class DeepModel(object):
 
     def __init__(self, config, session, graph):
         print("Init Model object")
@@ -47,13 +47,35 @@ class Model(object):
             bias_initializer=initializer,
             bias_regularizer=regularizer,
             activation=tf.nn.relu)
+        conv1 = tf.layers.conv2d(
+            inputs=conv1,
+            filters=32,
+            kernel_size=[3, 3],
+            padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer,
+            activation=tf.nn.relu)
         pool1 = tf.layers.max_pooling2d(
             inputs=conv1, pool_size=[2, 2], strides=(2, 2))
 
         # Convolutional Layer #2
         conv2 = tf.layers.conv2d(
             inputs=pool1,
-            filters=32,
+            filters=64,
+            kernel_size=[3, 3],
+            padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer,
+            activation=tf.nn.relu)
+        conv2 = tf.layers.conv2d(
+            inputs=pool1,
+            filters=64,
             kernel_size=[3, 3],
             padding="same",
             kernel_initializer=initializer,
@@ -68,7 +90,18 @@ class Model(object):
         # Convolutional Layer #3
         conv3 = tf.layers.conv2d(
             inputs=pool2,
-            filters=64,
+            filters=128,
+            kernel_size=[3, 3],
+            padding="same",
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer,
+            activation=tf.nn.relu)
+        conv3 = tf.layers.conv2d(
+            inputs=pool2,
+            filters=128,
             kernel_size=[3, 3],
             padding="same",
             kernel_initializer=initializer,
@@ -80,19 +113,19 @@ class Model(object):
         pool3 = tf.layers.max_pooling2d(
             inputs=conv3, pool_size=[2, 2], strides=(2, 2))
 
-        return pool3
+        # return pool3
 
         # Dense Layer
-        # Flatten for 64*64 : 8,8,64
-        flatten = tf.reshape(pool3, [-1, 8 * 8 * 64])
-        # Flatten for 150*150 : 18,18,64
-        # flatten = tf.reshape(pool4, [-1, 9 * 9 * 64])
-        # Flatten for 224*224 : 28,28,256
-        # flatten = tf.reshape(pool4, [-1, 14 * 14 * 64])
+        # Flatten for 64*64 : 8,8,128
+        flatten = tf.reshape(pool3, [-1, 8 * 8 * 128])
+        # Flatten for 150*150 : 18,18,128
+        # flatten = tf.reshape(pool4, [-1, 18 * 18 * 128])
+        # Flatten for 224*224 : 28,28,128
+        # flatten = tf.reshape(pool4, [-1, 28 * 28 * 128])
         # Dense Layer
         fc1 = tf.layers.dense(
             inputs=flatten,
-            units=64,
+            units=1024,
             activation=tf.nn.relu,
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
@@ -101,6 +134,19 @@ class Model(object):
             bias_regularizer=regularizer)
         fc1 = tf.layers.dropout(
             inputs=fc1,
+            rate=self.config.dropout,
+            training=training)
+        fc2 = tf.layers.dense(
+            inputs=fc1,
+            units=64,
+            activation=tf.nn.relu,
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer)
+        fc2 = tf.layers.dropout(
+            inputs=fc2,
             rate=self.config.dropout,
             training=training)
 
@@ -133,25 +179,26 @@ class Model(object):
                     self.model = self.init_model(self.images, self.training)
                     thresholds = tf.fill(
                         [self.config.batch_size], self.config.threshold)
-                    # self.predictions = tf.greater_equal(
-                    #     self.model, thresholds)
-                    # correct_prediction = tf.equal(
-                    #     self.predictions, tf.cast(self.labels, tf.bool))
-                    # self.accuracy = tf.reduce_mean(
-                    #     tf.cast(correct_prediction, tf.float32))
-                    # # self.loss = tf.losses.log_loss(
-                    # #     labels=self.labels, predictions=self.model)
-                    # self.loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
-                    #     labels=self.labels, logits=self.model))
-                    self.accuracy = tf.constant(1)
-                    self.loss = tf.constant(1)
-                    # self.optimizer = tf.train.RMSPropOptimizer(
-                    #     learning_rate=self.learning_rate).minimize(self.loss)
+                    self.predictions = tf.greater_equal(
+                        self.model, thresholds)
+                    correct_prediction = tf.equal(
+                        self.predictions, tf.cast(self.labels, tf.bool))
+                    self.accuracy = tf.reduce_mean(
+                        tf.cast(correct_prediction, tf.float32))
+                    self.loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
+                        labels=self.labels, logits=self.model))
+                    self.optimizer = tf.train.RMSPropOptimizer(
+                        learning_rate=self.learning_rate).minimize(self.loss)
+
+                    # self.accuracy = tf.constant(1)
+                    # self.loss = tf.constant(1)
+                    # self.loss = tf.losses.log_loss(
+                    #     labels=self.labels, predictions=self.model)
 
                     # TensorBoard Summary
-                    tf.summary.scalar("log_loss", self.loss)
-                    tf.summary.scalar("accuracy", self.accuracy)
-                    self.summary = tf.summary.merge_all()
+                    # tf.summary.scalar("log_loss", self.loss)
+                    # tf.summary.scalar("accuracy", self.accuracy)
+                    # self.summary = tf.summary.merge_all()
 
                     self.init = tf.global_variables_initializer()
                     self.writer = tf.summary.FileWriter(
@@ -177,9 +224,9 @@ class Model(object):
     def train_eval_batch(self, batch_images, batch_labels, training=True):
         feed_dict = self.generate_feed_dict(
             batch_images, batch_labels, training)
-        summary, loss, acc, _ = self.sess.run(
-            [self.summary, self.loss, self.accuracy, self.optimizer], feed_dict=feed_dict)
-        return summary, loss, acc
+        loss, acc, _ = self.sess.run(
+            [self.loss, self.accuracy, self.optimizer], feed_dict=feed_dict)
+        return loss, acc
 
     def eval_batch(self, batch_images, batch_labels, training=False):
         feed_dict = self.generate_feed_dict(
@@ -188,9 +235,9 @@ class Model(object):
             [self.loss, self.accuracy], feed_dict=feed_dict)
         return loss, acc
 
-    def test_batch(self, batch_images):
+    def test_batch(self, batch_images, training=False):
         self.sess.run(self.init)
-        feed_dict = self.generate_feed_dict(batch_images)
+        feed_dict = self.generate_feed_dict(batch_images, training)
         pred = self.sess.run(
             [self.model], feed_dict=feed_dict)
         return pred
@@ -213,25 +260,21 @@ if __name__ == '__main__':
         allow_soft_placement=True, log_device_placement=True)
     sess_config.gpu_options.allow_growth = True
     sess = tf.Session(config=sess_config)
-    # sess = tf.Session()
-    config = SimpleConfig()
-    model = Model(config, sess, graph)
+    config = DeepConfig()
+    model = DeepModel(config, sess, graph)
 
-    # train_dogs, train_cats = load_data(config.image_size)
-    # train_batches = prepare_train_data(
-    #     train_dogs, train_cats, config.batch_size)
-    # train_batch = next_batch(train_batches)
-    # batch_images, batch_labels = map(list, zip(*train_batch))
-    # batch_images = np.array(batch_images)
-    # batch_labels = np.array(batch_labels).reshape(-1, 1)
-    # batch_images = batch_images.reshape(-1, config.image_size,
-    #                                     config.image_size, config.channels)
-    # pred, loss, acc = model.predict(batch_images, batch_labels)
-    zeros = np.zeros(
-        (8, 224, 224, 3), dtype=np.int)
-    pred, loss, acc = model.predict(
-        zeros, np.array([1, 1, 1, 1, 1, 1, 1, 1]).reshape(-1, 1))
-    # print(pred, batch_labels)
+    train_dogs, train_cats = load_data(config.image_size)
+    train_batches = prepare_train_data(
+        train_dogs, train_cats, config.batch_size)
+    train_batch = next_batch(train_batches)
+    batch_images, batch_labels = map(list, zip(*train_batch))
+    batch_images = np.array(batch_images)
+    batch_labels = np.array(batch_labels).reshape(-1, 1)
+    pred, loss, acc = model.predict(batch_images, batch_labels)
+    # zeros = np.zeros(
+    #     (8, 150, 150, 3), dtype=np.int)
+    # pred, loss, acc = model.predict(
+    #     zeros, np.array([1, 1, 1, 1, 1, 1, 1, 1]).reshape(-1, 1))
     print(pred.shape)
     print(loss)
     print(acc)

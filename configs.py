@@ -38,7 +38,7 @@ class DeepConfig(object):
     """
     # Hyperparameters
     lr = 0.001          # Learning Rate
-    l2 = 0.0001         # L2 Loss Coefficient
+    l2 = 0.001          # L2 Loss Coefficient
     dropout = 0.5       # Dropout Rate
     batch_size = 32     # SGD Batch Size
     epochs = 30         # Number of Training Epochs
@@ -48,7 +48,7 @@ class DeepConfig(object):
     train_dir = './data/train'
     test_dir = './data/test'
     image_dir = './arrays/'
-    image_size = 224    # resize image to image_size*image_size
+    image_size = 64     # resize image to image_size*image_size
     channels = 3        # Channel Size
     valid_size = 1000
     train_size = 24000

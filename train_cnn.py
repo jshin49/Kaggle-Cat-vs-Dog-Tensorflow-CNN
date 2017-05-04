@@ -4,18 +4,31 @@ import os
 os.environ['TF_CPP_MIN_VLOG_LEVEL'] = '3'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+import sys
 import numpy as np
 import tensorflow as tf
 from tqdm import tqdm
 import random
 import matplotlib.pyplot as plt
 
-from simple_cnn_model import Model
-from configs import SimpleConfig
+from simple_cnn_model import SimpleModel
+from deep_cnn_model import DeepModel
+from configs import SimpleConfig, DeepConfig
 from utils.prepare_data import init_data, load_batches
 
 
 GRAPH_DIR = './graphs/'
+if (len(sys.argv) != 2):
+    print(
+        """
+        Please specify which model to train
+        \"python train_cnn.py DEEP\" or
+        \"python train_cnn.py SIMPLE\"
+        """)
+    exit()
+
+DEPTH = sys.argv[1]
+print("Training with " + DEPTH + " CNN Model")
 
 
 def train(model, valid_batches):
@@ -29,6 +42,7 @@ def train(model, valid_batches):
 
     global_step = 0
     for i in range(5):
+        print("Loading Batch")
         train_batches = load_batches(i)
         for epoch in range(model.epochs):
             for train_batch in tqdm(train_batches):
@@ -40,7 +54,7 @@ def train(model, valid_batches):
                 loss, acc = model.train_eval_batch(
                     train_batch_images, train_batch_labels, True)
 
-                if global_step % 50 == 0:
+                if global_step % 20 == 0:
                     print('\nEpoch: %d, Global Step: %d, Train Batch Loss: %f, Train Batch Acc: %f' % (
                         epoch + 1, global_step, loss, acc))
 
@@ -70,7 +84,7 @@ def train(model, valid_batches):
             # Output graphs
             plt.clf()
             plt.plot(x_steps, y_training_loss)
-            plt.xlabel('Steps')
+            plt.xlabel('Steps (per 20 Global Steps)')
             plt.ylabel('Training Loss')
             plt.savefig(GRAPH_DIR + 'training_loss_simple_cnn.png')
 
@@ -101,8 +115,12 @@ if __name__ == '__main__':
         allow_soft_placement=True, log_device_placement=True, gpu_options=gpu_options)
     sess_config.gpu_options.allow_growth = True
     sess = tf.Session(config=sess_config)
-    config = SimpleConfig()
-    model = Model(config, sess, graph)
+    if DEPTH == 'DEEP':
+        config = DeepConfig()
+        model = DeepModel(config, sess, graph)
+    else:
+        config = SimpleConfig()
+        model = SimpleModel(config, sess, graph)
 
     valid_batches = init_data(model.config)
 

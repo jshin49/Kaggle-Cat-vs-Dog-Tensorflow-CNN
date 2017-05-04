@@ -6,7 +6,7 @@ from configs import SimpleConfig
 from utils.prepare_data import load_data, prepare_train_data, next_batch
 
 
-class Model(object):
+class SimpleModel(object):
 
     def __init__(self, config, session, graph):
         print("Init Model object")
@@ -214,7 +214,7 @@ if __name__ == '__main__':
     sess_config.gpu_options.allow_growth = True
     sess = tf.Session(config=sess_config)
     config = SimpleConfig()
-    model = Model(config, sess, graph)
+    model = SimpleModel(config, sess, graph)
 
     train_dogs, train_cats = load_data(config.image_size)
     train_batches = prepare_train_data(
