@@ -35,7 +35,7 @@ class DeepConfig(object):
     """
     # Hyperparameters
     lr = 0.000005       # Learning Rate
-    l2 = 0.01           # L2 Loss Coefficient
+    l2 = 0.001          # L2 Loss Coefficient
     dropout = 0.3       # Dropout Rate
     batch_size = 32     # SGD Batch Size
     epochs = 40         # Number of Training Epochs
