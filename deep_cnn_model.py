@@ -90,7 +90,7 @@ class DeepModel(object):
         # Convolutional Layer #3
         conv3 = tf.layers.conv2d(
             inputs=pool2,
-            filters=128,
+            filters=64,
             kernel_size=[3, 3],
             padding="same",
             kernel_initializer=initializer,
@@ -101,7 +101,7 @@ class DeepModel(object):
             activation=tf.nn.relu)
         conv3 = tf.layers.conv2d(
             inputs=conv3,
-            filters=128,
+            filters=64,
             kernel_size=[3, 3],
             padding="same",
             kernel_initializer=initializer,
@@ -117,7 +117,7 @@ class DeepModel(object):
 
         # Dense Layer
         # Flatten for 64*64 : 8,8,128
-        flatten = tf.reshape(pool3, [-1, 8 * 8 * 128])
+        flatten = tf.reshape(pool3, [-1, 8 * 8 * 64])
         # Flatten for 150*150 : 18,18,128
         # flatten = tf.reshape(pool3, [-1, 18 * 18 * 128])
         # Flatten for 224*224 : 28,28,128

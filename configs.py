@@ -34,7 +34,7 @@ class DeepConfig(object):
     instantiation.
     """
     # Hyperparameters
-    lr = 0.00005        # Learning Rate
+    lr = 0.0001         # Learning Rate
     l2 = 0.001          # L2 Loss Coefficient
     dropout = 0.5       # Dropout Rate
     batch_size = 32     # SGD Batch Size
