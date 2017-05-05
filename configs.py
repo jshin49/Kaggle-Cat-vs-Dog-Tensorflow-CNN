@@ -7,12 +7,11 @@ class SimpleConfig(object):
     instantiation.
     """
     # Hyperparameters
-    lr = 0.00005        # Learning Rate
+    lr = 0.00001        # Learning Rate
     l2 = 0.001          # L2 Loss Coefficient
-    dropout = 0.5       # Dropout Rate
-    dropout_cnn = 0.9   # Dropout Rate for CNN Layer
+    dropout = 0.6       # Dropout Rate
     batch_size = 32     # SGD Batch Size
-    epochs = 25         # Number of Training Epochs
+    epochs = 15         # Number of Training Epochs
     threshold = 0.5     # Threshold for accurate classification
 
     # Data Processing
@@ -35,12 +34,11 @@ class DeepConfig(object):
     instantiation.
     """
     # Hyperparameters
-    lr = 0.000005       # Learning Rate
+    lr = 0.00001        # Learning Rate
     l2 = 0.001          # L2 Loss Coefficient
-    dropout = 0.5       # Dropout Rate
-    dropout_cnn = 0.9   # Dropout Rate for CNN Layer
+    dropout = 0.6       # Dropout Rate
     batch_size = 64     # SGD Batch Size
-    epochs = 35         # Number of Training Epochs
+    epochs = 30         # Number of Training Epochs
     threshold = 0.5     # Threshold for accurate classification
 
     # Data Processing
