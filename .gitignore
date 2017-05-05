@@ -5,5 +5,7 @@ data/
 __pycache__
 .DS_Store
 ckpt
+ckpt_simple
+ckpt_deep
 *.zip
 *.tgz

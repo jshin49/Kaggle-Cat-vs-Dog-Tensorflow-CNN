@@ -282,9 +282,12 @@ class DeepModel(object):
         self.saver.save(self.sess, self.config.ckpt_path +
                         '.ckpt', global_step=step)
 
-    def restore(self):
+    def restore(self, ensemble=False):
         # get checkpoint state
-        ckpt = tf.train.get_checkpoint_state('./ckpt')
+        if ensemble:
+            ckpt = tf.train.get_checkpoint_state('./ckpt_deep')
+        else:
+            ckpt = tf.train.get_checkpoint_state('./ckpt')
         # restore session
         if ckpt and ckpt.model_checkpoint_path:
             self.sess.run(self.init)

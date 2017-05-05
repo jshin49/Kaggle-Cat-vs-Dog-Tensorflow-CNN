@@ -37,8 +37,8 @@ class DeepConfig(object):
     lr = 0.000005       # Learning Rate
     l2 = 0.001          # L2 Loss Coefficient
     dropout = 0.3       # Dropout Rate
-    batch_size = 32     # SGD Batch Size
-    epochs = 50         # Number of Training Epochs
+    batch_size = 64     # SGD Batch Size
+    epochs = 35         # Number of Training Epochs
     threshold = 0.5     # Threshold for accurate classification
 
     # Data Processing
