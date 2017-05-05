@@ -9,9 +9,9 @@ class SimpleConfig(object):
     # Hyperparameters
     lr = 0.00005        # Learning Rate
     l2 = 0.001          # L2 Loss Coefficient
-    dropout = 0.6       # Dropout Rate
+    dropout = 0.4       # Dropout Rate
     batch_size = 32     # SGD Batch Size
-    epochs = 20         # Number of Training Epochs
+    epochs = 15         # Number of Training Epochs
     threshold = 0.5     # Threshold for accurate classification
 
     # Data Processing
@@ -38,7 +38,7 @@ class DeepConfig(object):
     l2 = 0.001          # L2 Loss Coefficient
     dropout = 0.3       # Dropout Rate
     batch_size = 32     # SGD Batch Size
-    epochs = 30         # Number of Training Epochs
+    epochs = 16         # Number of Training Epochs
     threshold = 0.5     # Threshold for accurate classification
 
     # Data Processing
