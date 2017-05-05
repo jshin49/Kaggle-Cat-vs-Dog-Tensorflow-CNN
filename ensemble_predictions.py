@@ -16,18 +16,6 @@ from configs import SimpleConfig, DeepConfig
 from utils.prepare_data import init_data, init_test_data
 
 
-if (len(sys.argv) != 2):
-    print(
-        """
-        Please specify which model to train
-        \"python generate_test_reports.py DEEP\" or
-        \"python generate_test_reports.py SIMPLE\"
-        """)
-    exit()
-
-DEPTH = sys.argv[1]
-print("Testing with " + DEPTH + " CNN Model")
-
 TEST_DIR = 'data/test'
 
 # Process test data and create batches in memory
@@ -37,30 +25,37 @@ sess_config = tf.ConfigProto(
     allow_soft_placement=True, log_device_placement=True, gpu_options=gpu_options)
 sess_config.gpu_options.allow_growth = True
 sess = tf.Session(config=sess_config)
-if DEPTH == 'DEEP':
-    config = DeepConfig()
-    model = DeepModel(config, sess, graph)
-else:
-    config = SimpleConfig()
-    model = SimpleModel(config, sess, graph)
+deep_config = DeepConfig()
+deep_model = DeepModel(config, sess, graph)
+simple_config = SimpleConfig()
+simple_model = SimpleModel(config, sess, graph)
 
-model.restore()
-print(DEPTH + " CNN Model Restored")
+deep_model.restore()
+print("Deep CNN Model Restored")
+simple_model.restore()
+print("Simple CNN Model Restored")
 
 test_batches = init_test_data(model.config)
 print(len(test_batches))
 
+deep_weight = 0.6
+simple_weight = 0.4
+
 # Get predictions and Write them in CSV for submission
-with open('results/' + DEPTH + '.csv', 'wb') as csvfile:
+with open('results/ensemble.csv', 'wb') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(['id', 'label'])
 
     for test_batch in test_batches:
         images, labels = map(list, zip(*test_batch))
         labels = np.array(labels).reshape(-1, 1)
-        pred = np.array(model.test_batch(images, labels))
-        print(pred.flatten().shape)
-        print(labels.flatten().shape)
-        for id, label in zip(labels.flatten(), pred.flatten()):
-            print(int(id), label)
-            writer.writerow([int(id), label])
+        deep_pred = np.array(deep_model.test_batch(images, labels))
+        simple_pred = np.array(simple_model.test_batch(images, labels))
+
+        for deep, deep_id, simple, simple_id in zip(deep_pred.flatten(), simple_pred.flatten()):
+            print(deep_id, deep, simple_id, simple)
+            pred =
+
+        # for id, label in zip(labels.flatten(), pred.flatten()):
+        #     print(int(id), label)
+        #     writer.writerow([int(id), label])
