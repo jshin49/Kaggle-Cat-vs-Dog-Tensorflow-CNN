@@ -138,7 +138,7 @@ class DeepModel(object):
             training=training)
         fc2 = tf.layers.dense(
             inputs=fc1,
-            units=64,
+            units=256,
             activation=tf.nn.relu,
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
@@ -149,9 +149,22 @@ class DeepModel(object):
             inputs=fc2,
             rate=self.config.dropout,
             training=training)
+        fc3 = tf.layers.dense(
+            inputs=fc1,
+            units=64,
+            activation=tf.nn.relu,
+            kernel_initializer=initializer,
+            kernel_regularizer=regularizer,
+            use_bias=True,
+            bias_initializer=initializer,
+            bias_regularizer=regularizer)
+        fc3 = tf.layers.dropout(
+            inputs=fc2,
+            rate=self.config.dropout,
+            training=training)
 
         # One output: Confidence score of being a dog
-        logits = tf.layers.dense(inputs=fc2, units=1, activation=tf.nn.sigmoid)
+        logits = tf.layers.dense(inputs=fc3, units=1, activation=tf.nn.sigmoid)
 
         return logits
 
