@@ -125,7 +125,7 @@ class DeepModel(object):
         # Dense Layer
         fc1 = tf.layers.dense(
             inputs=flatten,
-            units=1024,
+            units=512,
             activation=tf.nn.relu,
             kernel_initializer=initializer,
             kernel_regularizer=regularizer,
