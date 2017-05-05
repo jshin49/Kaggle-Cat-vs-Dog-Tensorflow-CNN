@@ -150,7 +150,7 @@ class DeepModel(object):
             rate=self.config.dropout,
             training=training)
         fc3 = tf.layers.dense(
-            inputs=fc1,
+            inputs=fc2,
             units=64,
             activation=tf.nn.relu,
             kernel_initializer=initializer,
@@ -159,7 +159,7 @@ class DeepModel(object):
             bias_initializer=initializer,
             bias_regularizer=regularizer)
         fc3 = tf.layers.dropout(
-            inputs=fc2,
+            inputs=fc3,
             rate=self.config.dropout,
             training=training)
 
