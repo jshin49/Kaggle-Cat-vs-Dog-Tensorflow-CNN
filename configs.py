@@ -9,7 +9,8 @@ class SimpleConfig(object):
     # Hyperparameters
     lr = 0.00005        # Learning Rate
     l2 = 0.001          # L2 Loss Coefficient
-    dropout = 0.6       # Dropout Rate
+    dropout = 0.5       # Dropout Rate
+    dropout_cnn = 0.9   # Dropout Rate for CNN Layer
     batch_size = 32     # SGD Batch Size
     epochs = 25         # Number of Training Epochs
     threshold = 0.5     # Threshold for accurate classification
@@ -36,7 +37,8 @@ class DeepConfig(object):
     # Hyperparameters
     lr = 0.000005       # Learning Rate
     l2 = 0.001          # L2 Loss Coefficient
-    dropout = 0.3       # Dropout Rate
+    dropout = 0.5       # Dropout Rate
+    dropout_cnn = 0.9   # Dropout Rate for CNN Layer
     batch_size = 64     # SGD Batch Size
     epochs = 35         # Number of Training Epochs
     threshold = 0.5     # Threshold for accurate classification

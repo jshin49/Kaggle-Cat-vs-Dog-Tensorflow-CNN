@@ -60,6 +60,10 @@ class DeepModel(object):
             activation=tf.nn.relu)
         pool1 = tf.layers.max_pooling2d(
             inputs=conv1, pool_size=[2, 2], strides=(2, 2))
+        pool1 = tf.layers.dropout(
+            inputs=pool1,
+            rate=self.config.dropout_cnn,
+            training=training)
 
         # Convolutional Layer #2
         conv2 = tf.layers.conv2d(
@@ -86,6 +90,10 @@ class DeepModel(object):
             activation=tf.nn.relu)
         pool2 = tf.layers.max_pooling2d(
             inputs=conv2, pool_size=[2, 2], strides=(2, 2))
+        pool2 = tf.layers.dropout(
+            inputs=pool2,
+            rate=self.config.dropout_cnn,
+            training=training)
 
         # Convolutional Layer #3
         conv3 = tf.layers.conv2d(
@@ -112,6 +120,10 @@ class DeepModel(object):
             activation=tf.nn.relu)
         pool3 = tf.layers.max_pooling2d(
             inputs=conv3, pool_size=[2, 2], strides=(2, 2))
+        pool3 = tf.layers.dropout(
+            inputs=pool3,
+            rate=self.config.dropout_cnn,
+            training=training)
 
         # return pool3
 
