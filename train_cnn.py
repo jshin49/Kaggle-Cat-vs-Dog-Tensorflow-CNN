@@ -43,10 +43,11 @@ def train(model, valid_batches):
     valid_size = len(valid_batches)
 
     global_step = 0
-    for i in range(20):
-        print("Loading Batch")
-        train_batches = load_batches(i)
-        for epoch in range(model.epochs):
+    for epoch in range(model.epochs):
+        for i in range(20):
+            print("Loading Batch")
+            train_batches = load_batches(i)
+
             print("Shuffling Batches")
             np.random.shuffle(train_batches)
             np.random.shuffle(valid_batches)
@@ -85,74 +86,74 @@ def train(model, valid_batches):
 
                 global_step += 1
 
-            # Save model after every epoch
-            print('saving checkpoint')
-            model.save(global_step)
+        # Save model after every epoch
+        print('saving checkpoint')
+        model.save(global_step)
 
-            # Output graphs
-            plt.clf()
-            plt.plot(x_steps, y_training_loss)
-            plt.xlabel('Global Steps')
-            plt.ylabel('Training Loss')
-            plt.savefig(GRAPH_DIR + DEPTH +
-                        '_training_loss.png')
+        # Output graphs
+        plt.clf()
+        plt.plot(x_steps, y_training_loss)
+        plt.xlabel('Global Steps')
+        plt.ylabel('Training Loss')
+        plt.savefig(GRAPH_DIR + DEPTH +
+                    '_training_loss.png')
 
-            plt.clf()
-            plt.plot(x_steps, y_training_accuracy)
-            plt.xlabel('Steps')
-            plt.ylabel('Training Accuracy')
-            plt.savefig(GRAPH_DIR + DEPTH +
-                        '_training_accuracy.png')
+        plt.clf()
+        plt.plot(x_steps, y_training_accuracy)
+        plt.xlabel('Steps')
+        plt.ylabel('Training Accuracy')
+        plt.savefig(GRAPH_DIR + DEPTH +
+                    '_training_accuracy.png')
 
-            plt.clf()
-            plt.plot(x_steps, y_training_loss)
-            plt.plot(x_steps, y_training_accuracy)
-            plt.legend(['loss', 'acc'], loc='upper right')
-            plt.xlabel('Steps')
-            plt.ylabel('Training')
-            plt.savefig(GRAPH_DIR + DEPTH +
-                        '_training.png')
+        plt.clf()
+        plt.plot(x_steps, y_training_loss)
+        plt.plot(x_steps, y_training_accuracy)
+        plt.legend(['loss', 'acc'], loc='upper right')
+        plt.xlabel('Steps')
+        plt.ylabel('Training')
+        plt.savefig(GRAPH_DIR + DEPTH +
+                    '_training.png')
 
-            plt.clf()
-            plt.plot(x_steps, y_valid_loss)
-            plt.xlabel('Steps')
-            plt.ylabel('Validation Loss')
-            plt.savefig(GRAPH_DIR + DEPTH +
-                        '_validation_loss.png')
+        plt.clf()
+        plt.plot(x_steps, y_valid_loss)
+        plt.xlabel('Steps')
+        plt.ylabel('Validation Loss')
+        plt.savefig(GRAPH_DIR + DEPTH +
+                    '_validation_loss.png')
 
-            plt.clf()
-            plt.plot(x_steps, y_valid_accuracy)
-            plt.xlabel('Steps')
-            plt.ylabel('Validation Accuracy')
-            plt.savefig(GRAPH_DIR + DEPTH +
-                        '_validation_accuracy.png')
+        plt.clf()
+        plt.plot(x_steps, y_valid_accuracy)
+        plt.xlabel('Steps')
+        plt.ylabel('Validation Accuracy')
+        plt.savefig(GRAPH_DIR + DEPTH +
+                    '_validation_accuracy.png')
 
-            plt.clf()
-            plt.plot(x_steps, y_valid_loss)
-            plt.plot(x_steps, y_valid_accuracy)
-            plt.legend(['loss', 'acc'], loc='upper right')
-            plt.xlabel('Steps')
-            plt.ylabel('Validation')
-            plt.savefig(GRAPH_DIR + DEPTH +
-                        '_validation.png')
+        plt.clf()
+        plt.plot(x_steps, y_valid_loss)
+        plt.plot(x_steps, y_valid_accuracy)
+        plt.legend(['loss', 'acc'], loc='upper right')
+        plt.xlabel('Steps')
+        plt.ylabel('Validation')
+        plt.savefig(GRAPH_DIR + DEPTH +
+                    '_validation.png')
 
-            plt.clf()
-            plt.plot(x_steps, y_training_loss)
-            plt.plot(x_steps, y_valid_loss)
-            plt.legend(['train', 'valid'], loc='upper right')
-            plt.xlabel('Steps')
-            plt.ylabel('Loss')
-            plt.savefig(GRAPH_DIR + DEPTH +
-                        '_loss.png')
+        plt.clf()
+        plt.plot(x_steps, y_training_loss)
+        plt.plot(x_steps, y_valid_loss)
+        plt.legend(['train', 'valid'], loc='upper right')
+        plt.xlabel('Steps')
+        plt.ylabel('Loss')
+        plt.savefig(GRAPH_DIR + DEPTH +
+                    '_loss.png')
 
-            plt.clf()
-            plt.plot(x_steps, y_training_accuracy)
-            plt.plot(x_steps, y_valid_accuracy)
-            plt.legend(['train', 'valid'], loc='upper right')
-            plt.xlabel('Steps')
-            plt.ylabel('Accuracy')
-            plt.savefig(GRAPH_DIR + DEPTH +
-                        '_accuracy.png')
+        plt.clf()
+        plt.plot(x_steps, y_training_accuracy)
+        plt.plot(x_steps, y_valid_accuracy)
+        plt.legend(['train', 'valid'], loc='upper right')
+        plt.xlabel('Steps')
+        plt.ylabel('Accuracy')
+        plt.savefig(GRAPH_DIR + DEPTH +
+                    '_accuracy.png')
 
 
 if __name__ == '__main__':
