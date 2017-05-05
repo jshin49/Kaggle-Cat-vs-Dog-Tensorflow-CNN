@@ -223,10 +223,14 @@ class SimpleModel(object):
         self.saver.save(self.sess, self.config.ckpt_path +
                         '.ckpt', global_step=step)
 
-    def restore(self, ensemble=False):
+    def restore(self, path=None):
         # get checkpoint state
-        if ensemble:
-            ckpt = tf.train.get_checkpoint_state('./ckpt_simple')
+        if path:
+            ckpt = tf.train.get_checkpoint_state(path)
+            print(ckpt)
+            print(ckpt)
+            print(ckpt)
+            print(ckpt)
         else:
             ckpt = tf.train.get_checkpoint_state('./ckpt')
         # restore session
