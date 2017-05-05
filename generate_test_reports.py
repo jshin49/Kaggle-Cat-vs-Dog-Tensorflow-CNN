@@ -44,9 +44,6 @@ else:
     config = SimpleConfig()
     model = SimpleModel(config, sess, graph)
 
-model.sess.run(model.init)
-print("\nGlobal Variables Initialized")
-
 model.restore()
 print(DEPTH + " CNN Model Restored")
 
@@ -67,5 +64,5 @@ with open('results/' + DEPTH + '.csv', 'wb') as csvfile:
         print(pred.flatten().shape)
         print(labels.flatten().shape)
         for id, label in zip(labels.flatten(), pred.flatten()):
-            print(id, label)
-            # writer.writerow([id, label])
+            print(int(id), label)
+            writer.writerow([int(id), label])
