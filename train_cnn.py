@@ -47,6 +47,8 @@ def train(model, valid_batches):
         print("Loading Batch")
         train_batches = load_batches(i)
         for epoch in range(model.epochs):
+            print("Shuffling Batches")
+            np.random.shuffle(train_batches)
             for train_batch in tqdm(train_batches):
                 train_batch_images, train_batch_labels = map(
                     list, zip(*train_batch))
